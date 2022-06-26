@@ -1,10 +1,6 @@
 name: Lint & test & build
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: push
 
 jobs:
   golangci:
@@ -13,12 +9,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Generate
+        run: |-
+          go get -u -t github.com/tinylib/msgp
+          go install github.com/tinylib/msgp
+          make gen
+
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.46.2
           args: --enable-all
-
   tests:
     runs-on: ubuntu-latest
 
@@ -44,10 +50,10 @@ jobs:
           go install github.com/tinylib/msgp
           make gen
 
-#      - name: Test
-#        run: make test
-#        env:
-#          CFG_PATH: ./conf/config.github.json
+  #      - name: Test
+  #        run: make test
+  #        env:
+  #          CFG_PATH: ./conf/config.github.json
   build:
     runs-on: ubuntu-latest
 

@@ -1,0 +1,7 @@
+/vendor
+/.git*
+/.idea
+conf/config.local.json
+conf/config.remote.json
+*_gen.go
+*_gen_test.go

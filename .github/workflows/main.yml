@@ -1,0 +1,75 @@
+name: Lint & test & build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.46.2
+          args: --enable-all
+
+  tests:
+    runs-on: ubuntu-latest
+
+    services:
+      rabbitmq:
+        image: rabbitmq:3.10.5-alpine
+        env:
+          RABBITMQ_DEFAULT_USER: "stockwayup"
+          RABBITMQ_DEFAULT_PASS: "stockwayup"
+        ports:
+          - 5672:5672
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Generate
+        run: |-
+          go get -u -t github.com/tinylib/msgp
+          go install github.com/tinylib/msgp
+          make gen
+
+#      - name: Test
+#        run: make test
+#        env:
+#          CFG_PATH: ./conf/config.github.json
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/swup:http-0.0.1
+          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/swup:http-latest
+          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/swup:http-latest,mode=max

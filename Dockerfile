@@ -13,6 +13,8 @@ RUN go get -u -t github.com/tinylib/msgp && \
 
 FROM alpine:3.16
 
+RUN adduser -S www-data -G www-data
+
 COPY --from=builder --chown=www-data /bin/stockwayup /bin/stockwayup
 
 RUN chmod +x /bin/stockwayup

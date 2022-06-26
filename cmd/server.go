@@ -73,7 +73,14 @@ func NewServerCMD() *cobra.Command {
 				return sub.StartConsumer(ctx)
 			})
 
-			s := http.NewServer(cfg, controller.NewHTTP(httpSvc.NewResponse(), pub, reqBroker, &logger), &logger)
+			respSvc := httpSvc.NewResponse()
+
+			s := http.NewServer(
+				cfg,
+				controller.NewHTTP(respSvc, pub, reqBroker, &logger),
+				controller.NewHealthCheck(respSvc),
+				&logger,
+			)
 
 			if err != nil {
 				logger.Err(err).Msg("router creation failed")

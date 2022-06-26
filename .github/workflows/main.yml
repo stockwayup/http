@@ -76,6 +76,6 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/swup:http-0.0.1
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/swup:http-0.0.4
           cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/swup:http-latest
           cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/swup:http-latest,mode=max

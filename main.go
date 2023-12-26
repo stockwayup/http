@@ -6,6 +6,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/stockwayup/http/cmd"
+	_ "go.uber.org/automaxprocs"
 )
 
 func main() {

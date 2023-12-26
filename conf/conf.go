@@ -12,19 +12,19 @@ import (
 type Config struct {
 	Env string `json:"env" required:"true"`
 	RMQ struct {
-		Host     string `json:"host"      required:"true"`
-		Port     string `json:"port"      default:"6379"`
-		User     string `json:"user"      default:"guest"`
-		Password string `json:"password"  default:"guest"`
+		Host     string `json:"host"     required:"true"`
+		Port     string `default:"6379"  json:"port"`
+		User     string `default:"guest" json:"user"`
+		Password string `default:"guest" json:"password"`
 
 		Queues struct {
 			Requests  *pubsub.Cfg `json:"requests"`
 			Responses *pubsub.Cfg `json:"responses"`
 		} `json:"queues"`
 	} `json:"rmq"`
-	ListenPort string `json:"listen_port" default:"8000"`
-	DebugMode  bool   `json:"debug_mode"  default:"false"`
-	EnableCors bool   `json:"enable_cors" default:"false"`
+	ListenPort string `default:"8000"  json:"listen_port"`
+	DebugMode  bool   `default:"false" json:"debug_mode"`
+	EnableCors bool   `default:"false" json:"enable_cors"`
 }
 
 func New() *Config {

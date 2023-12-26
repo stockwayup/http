@@ -6,15 +6,17 @@ import (
 	"strings"
 	"time"
 
+	"github.com/stockwayup/http/dictionary"
+
 	"github.com/fasthttp/router"
 
+	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/rs/zerolog"
 	uuid "github.com/satori/go.uuid"
 	pubsub "github.com/soulgarden/rmq-pubsub"
-	"github.com/stockwayup/http/server/http/dictionary"
+	serverDict "github.com/stockwayup/http/server/http/dictionary"
 	httpSvc "github.com/stockwayup/http/server/http/service"
 	"github.com/stockwayup/http/storage/rmq/event"
-	"github.com/streadway/amqp"
 	"github.com/valyala/fasthttp"
 )
 
@@ -26,14 +28,14 @@ const (
 
 type HTTP struct {
 	respSvc   *httpSvc.Response
-	pub       *pubsub.Pub
+	pub       pubsub.Pub
 	reqBroker *httpSvc.Router
 	logger    *zerolog.Logger
 }
 
 func NewHTTP(
 	respSvc *httpSvc.Response,
-	pub *pubsub.Pub,
+	pub pubsub.Pub,
 	reqBroker *httpSvc.Router,
 	logger *zerolog.Logger,
 ) *HTTP {
@@ -44,11 +46,13 @@ func (c *HTTP) Handle(ctx *fasthttp.RequestCtx) {
 	msgID := uuid.NewV4().String()
 	startedAt := time.Now()
 
-	logger := c.logger.With().Str("id", msgID).Logger()
+	logCtx := c.logger.With().
+		Str("id", msgID).
+		Logger().
+		WithContext(context.WithValue(ctx, dictionary.ID, msgID))
 
 	defer func() {
-		logger.Debug().
-			Str("id", msgID).
+		zerolog.Ctx(logCtx).Debug().
 			Interface("path", ctx.UserValue(router.MatchedRoutePathParam)).
 			Interface("time", time.Since(startedAt).String()).
 			Msg("http request processed")
@@ -58,7 +62,7 @@ func (c *HTTP) Handle(ctx *fasthttp.RequestCtx) {
 
 	bytes, err := req.MarshalMsg(nil)
 	if err != nil {
-		logger.Err(err).Msg("marshall request")
+		zerolog.Ctx(logCtx).Err(err).Msg("marshall request")
 
 		c.respSvc.SendInternalError(ctx)
 	}
@@ -69,7 +73,7 @@ func (c *HTTP) Handle(ctx *fasthttp.RequestCtx) {
 		DeliveryMode: amqp.Transient,
 		Body:         bytes,
 		Timestamp:    time.Now(),
-		Expiration:   dictionary.RequestTTL,
+		Expiration:   serverDict.RequestTTL,
 	}
 
 	c.pub.Publish(reqMsg)
@@ -78,7 +82,7 @@ func (c *HTTP) Handle(ctx *fasthttp.RequestCtx) {
 
 	defer c.reqBroker.Unsubscribe(msgID)
 
-	timeoutCtx, cancel := context.WithTimeout(ctx, dictionary.RequestTimeout)
+	timeoutCtx, cancel := context.WithTimeout(ctx, serverDict.RequestTimeout)
 
 	defer cancel()
 
@@ -86,7 +90,7 @@ func (c *HTTP) Handle(ctx *fasthttp.RequestCtx) {
 	case respMsg := <-ch:
 		code, err := strconv.Atoi(respMsg.Type)
 		if err != nil {
-			logger.Err(err).Msg("string to int conversion")
+			zerolog.Ctx(logCtx).Err(err).Msg("string to int conversion")
 
 			c.respSvc.SendInternalError(ctx)
 
@@ -95,7 +99,7 @@ func (c *HTTP) Handle(ctx *fasthttp.RequestCtx) {
 
 		c.respSvc.SendJSONResponse(ctx, respMsg.Body, code)
 	case <-timeoutCtx.Done():
-		logger.Warn().Msg("timeout")
+		zerolog.Ctx(logCtx).Warn().Msg("timeout")
 		c.respSvc.SendTimeoutError(ctx)
 
 		return

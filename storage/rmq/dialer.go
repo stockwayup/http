@@ -5,8 +5,8 @@ import (
 
 	"github.com/stockwayup/http/conf"
 
-	"github.com/isayme/go-amqp-reconnect/rabbitmq"
 	"github.com/rs/zerolog"
+	"github.com/soulgarden/go-amqp-reconnect/rabbitmq"
 )
 
 type Dialer struct {

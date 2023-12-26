@@ -6,12 +6,12 @@
   "rmq": {
     "host": "rmq.stockwayup.local",
     "port": "5672",
-    "user": "stockwayup",
-    "password": "stockwayup",
+    "user": "user",
+    "password": "pass",
     "queues": {
       "requests": {
         "exchange_name": "",
-        "queue_name": "http_requests",
+        "queue_name": "http.requests",
         "queue_len": 100,
         "errors_threshold": 100,
         "prefetch_count": 1,
@@ -19,7 +19,7 @@
         "exclusive": false
       },
       "responses": {
-        "exchange_name": "http_responses",
+        "exchange_name": "http.responses",
         "queue_name": "",
         "queue_len": 100,
         "errors_threshold": 100,

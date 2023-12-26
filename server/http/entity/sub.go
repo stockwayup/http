@@ -1,6 +1,6 @@
 package entity
 
-import "github.com/streadway/amqp"
+import amqp "github.com/rabbitmq/amqp091-go"
 
 type Sub struct {
 	ID string

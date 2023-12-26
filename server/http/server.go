@@ -34,7 +34,7 @@ func NewServer(
 	}
 }
 
-// nolint:funlen
+//nolint:funlen
 func (s *Server) NewRouter() *router.Router {
 	r := router.New()
 	r.SaveMatchedRoutePath = true
@@ -59,6 +59,9 @@ func (s *Server) NewRouter() *router.Router {
 	r.GET("/api/v1/confirmation-codes", s.http.Handle)
 	r.POST("/api/v1/confirmation-codes/{id}", s.http.Handle)
 
+	r.POST("/api/v1/password-confirmation-codes", s.http.Handle)
+	r.POST("/api/v1/password-confirmation-codes/{id}", s.http.Handle)
+
 	r.GET("/api/v1/plans", s.http.Handle)
 
 	r.POST("/api/v1/portfolios", s.http.Handle)
@@ -76,6 +79,7 @@ func (s *Server) NewRouter() *router.Router {
 	r.PATCH("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions/{tid:[0-9]+}", s.http.Handle)
 	r.GET("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions/{tid:[0-9]+}", s.http.Handle)
 	r.DELETE("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions/{tid:[0-9]+}", s.http.Handle)
+
 	r.GET("/api/v1/portfolios/{pid:[0-9]+}/securities", s.http.Handle)
 	r.GET("/api/v1/portfolios/{pid:[0-9]+}/news", s.http.Handle)
 	r.GET("/api/v1/portfolios/{pid:[0-9]+}/earnings", s.http.Handle)

@@ -8,5 +8,5 @@ gen:
 	go generate ./...
 
 build:
-	docker build . -t soulgarden/swup:http-0.0.4 --platform linux/amd64
-	docker push soulgarden/swup:http-0.0.4
+	docker build . -t soulgarden/swup:http-0.0.6 --platform linux/amd64
+	docker push soulgarden/swup:http-0.0.6

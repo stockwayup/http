@@ -1,8 +1,8 @@
 package http
 
 import (
+	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/stockwayup/http/server/http/entity"
-	"github.com/streadway/amqp"
 )
 
 const eventChSize = 1

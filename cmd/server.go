@@ -16,11 +16,11 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-// nolint: funlen
+//nolint: funlen
 func NewServerCMD() *cobra.Command {
 	return &cobra.Command{
 		Use:   "server",
-		Short: "Run server",
+		Short: "Run http server",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg := conf.New()
@@ -34,6 +34,8 @@ func NewServerCMD() *cobra.Command {
 			cmdManager := service.NewManager(&logger)
 
 			ctx, _ := cmdManager.ListenSignal()
+
+			ctx = logger.WithContext(ctx)
 
 			g, ctx := errgroup.WithContext(ctx)
 
@@ -73,7 +75,14 @@ func NewServerCMD() *cobra.Command {
 				return sub.StartConsumer(ctx)
 			})
 
-			s := http.NewServer(cfg, controller.NewHTTP(httpSvc.NewResponse(), pub, reqBroker, &logger), &logger)
+			respSvc := httpSvc.NewResponse()
+
+			s := http.NewServer(
+				cfg,
+				controller.NewHTTP(respSvc, pub, reqBroker, &logger),
+				controller.NewHealthCheck(respSvc),
+				&logger,
+			)
 
 			if err != nil {
 				logger.Err(err).Msg("router creation failed")
@@ -93,7 +102,7 @@ func NewServerCMD() *cobra.Command {
 			g.Go(func() error {
 				err := s.Serve(s.NewRouter())
 
-				logger.Err(err).Msg("the http server shutdown")
+				logger.Err(err).Msg("the http server serve")
 
 				return err
 			})

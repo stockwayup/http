@@ -12,92 +12,99 @@ import (
 const maxAge = 60 * 60
 
 type Server struct {
-	cfg        *conf.Config
-	controller *controller.HTTP
-	server     *fasthttp.Server
-	logger     *zerolog.Logger
+	cfg         *conf.Config
+	http        *controller.HTTP
+	healthcheck *controller.HealthCheck
+	server      *fasthttp.Server
+	logger      *zerolog.Logger
 }
 
 func NewServer(
 	cfg *conf.Config,
-	controller *controller.HTTP,
+	http *controller.HTTP,
+	healthcheck *controller.HealthCheck,
 	logger *zerolog.Logger,
 ) *Server {
 	return &Server{
 		cfg,
-		controller,
+		http,
+		healthcheck,
 		&fasthttp.Server{},
 		logger,
 	}
 }
 
-// nolint:funlen
+//nolint:funlen
 func (s *Server) NewRouter() *router.Router {
 	r := router.New()
 	r.SaveMatchedRoutePath = true
 
-	r.GET("/api/v1/statuses", s.controller.Handle)
+	r.GET("/api/v1/statuses", s.healthcheck.Handle)
 
-	r.POST("/api/v1/users", s.controller.Handle)
-	r.GET("/api/v1/users/{uid:[0-9]+}/news", s.controller.Handle)
-	r.GET("/api/v1/users/{uid:[0-9]+}/earnings", s.controller.Handle)
-	r.GET("/api/v1/users/{uid:[0-9]+}/dividends", s.controller.Handle)
-	r.GET("/api/v1/users/{uid:[0-9]+}", s.controller.Handle)
+	r.POST("/api/v1/users", s.http.Handle)
+	r.GET("/api/v1/users/{uid:[0-9]+}/news", s.http.Handle)
+	r.GET("/api/v1/users/{uid:[0-9]+}/earnings", s.http.Handle)
+	r.GET("/api/v1/users/{uid:[0-9]+}/dividends", s.http.Handle)
+	r.GET("/api/v1/users/{uid:[0-9]+}", s.http.Handle)
 
-	r.GET("/api/v1/users/{uid:[0-9]+}/day-prices", s.controller.Handle)
-	r.GET("/api/v1/users/{uid:[0-9]+}/day-price-periods", s.controller.Handle)
+	r.GET("/api/v1/users/{uid:[0-9]+}/day-prices", s.http.Handle)
+	r.GET("/api/v1/users/{uid:[0-9]+}/day-price-periods", s.http.Handle)
 
-	r.GET("/api/v1/users/{uid:[0-9]+}/view-history", s.controller.Handle)
+	r.GET("/api/v1/users/{uid:[0-9]+}/view-history", s.http.Handle)
 
-	r.POST("/api/v1/refresh-tokens", s.controller.Handle)
-	r.DELETE("/api/v1/refresh-tokens/{refresh-token}", s.controller.Handle)
-	r.POST("/api/v1/sessions", s.controller.Handle)
+	r.POST("/api/v1/refresh-tokens", s.http.Handle)
+	r.DELETE("/api/v1/refresh-tokens/{refresh-token}", s.http.Handle)
+	r.POST("/api/v1/sessions", s.http.Handle)
 
-	r.GET("/api/v1/confirmation-codes", s.controller.Handle)
-	r.POST("/api/v1/confirmation-codes/{id}", s.controller.Handle)
+	r.GET("/api/v1/confirmation-codes", s.http.Handle)
+	r.POST("/api/v1/confirmation-codes/{id}", s.http.Handle)
 
-	r.GET("/api/v1/plans", s.controller.Handle)
+	r.POST("/api/v1/password-confirmation-codes", s.http.Handle)
+	r.POST("/api/v1/password-confirmation-codes/{id}", s.http.Handle)
 
-	r.POST("/api/v1/portfolios", s.controller.Handle)
-	r.GET("/api/v1/portfolios", s.controller.Handle)
-	r.GET("/api/v1/portfolios/{pid:[0-9]+}", s.controller.Handle)
-	r.PATCH("/api/v1/portfolios/{pid:[0-9]+}", s.controller.Handle)
-	r.DELETE("/api/v1/portfolios/{pid:[0-9]+}", s.controller.Handle)
+	r.GET("/api/v1/plans", s.http.Handle)
 
-	r.DELETE("/api/v1/portfolios/{pid:[0-9]+}/relationships/securities", s.controller.Handle)
-	r.POST("/api/v1/portfolios/{pid:[0-9]+}/relationships/securities", s.controller.Handle)
+	r.POST("/api/v1/portfolios", s.http.Handle)
+	r.GET("/api/v1/portfolios", s.http.Handle)
+	r.GET("/api/v1/portfolios/{pid:[0-9]+}", s.http.Handle)
+	r.PATCH("/api/v1/portfolios/{pid:[0-9]+}", s.http.Handle)
+	r.DELETE("/api/v1/portfolios/{pid:[0-9]+}", s.http.Handle)
 
-	r.POST("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions", s.controller.Handle)
-	r.GET("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions", s.controller.Handle)
+	r.DELETE("/api/v1/portfolios/{pid:[0-9]+}/relationships/securities", s.http.Handle)
+	r.POST("/api/v1/portfolios/{pid:[0-9]+}/relationships/securities", s.http.Handle)
 
-	r.PATCH("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions/{tid:[0-9]+}", s.controller.Handle)
-	r.GET("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions/{tid:[0-9]+}", s.controller.Handle)
-	r.DELETE("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions/{tid:[0-9]+}", s.controller.Handle)
-	r.GET("/api/v1/portfolios/{pid:[0-9]+}/securities", s.controller.Handle)
-	r.GET("/api/v1/portfolios/{pid:[0-9]+}/news", s.controller.Handle)
-	r.GET("/api/v1/portfolios/{pid:[0-9]+}/earnings", s.controller.Handle)
-	r.GET("/api/v1/portfolios/{pid:[0-9]+}/dividends", s.controller.Handle)
-	r.GET("/api/v1/portfolios/{pid:[0-9]+}/day-prices", s.controller.Handle)
-	r.GET("/api/v1/portfolios/{pid:[0-9]+}/day-price-periods", s.controller.Handle)
+	r.POST("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions", s.http.Handle)
+	r.GET("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions", s.http.Handle)
 
-	r.GET("/api/v1/securities", s.controller.Handle)
-	r.GET("/api/v1/securities/{sid:[0-9]+}/news", s.controller.Handle)
-	r.GET("/api/v1/securities/{sid:[0-9]+}/day-prices", s.controller.Handle)
-	r.GET("/api/v1/securities/{sid:[0-9]+}/day-price-periods", s.controller.Handle)
+	r.PATCH("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions/{tid:[0-9]+}", s.http.Handle)
+	r.GET("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions/{tid:[0-9]+}", s.http.Handle)
+	r.DELETE("/api/v1/portfolios/{pid:[0-9]+}/securities/{sid:[0-9]+}/transactions/{tid:[0-9]+}", s.http.Handle)
 
-	r.GET("/api/v1/securities/{sid:[0-9]+}/quarterly-balance-sheet", s.controller.Handle)
-	r.GET("/api/v1/securities/{sid:[0-9]+}/annual-balance-sheet", s.controller.Handle)
+	r.GET("/api/v1/portfolios/{pid:[0-9]+}/securities", s.http.Handle)
+	r.GET("/api/v1/portfolios/{pid:[0-9]+}/news", s.http.Handle)
+	r.GET("/api/v1/portfolios/{pid:[0-9]+}/earnings", s.http.Handle)
+	r.GET("/api/v1/portfolios/{pid:[0-9]+}/dividends", s.http.Handle)
+	r.GET("/api/v1/portfolios/{pid:[0-9]+}/day-prices", s.http.Handle)
+	r.GET("/api/v1/portfolios/{pid:[0-9]+}/day-price-periods", s.http.Handle)
 
-	r.GET("/api/v1/securities/{sid:[0-9]+}/quarterly-income-statements", s.controller.Handle)
-	r.GET("/api/v1/securities/{sid:[0-9]+}/annual-income-statements", s.controller.Handle)
+	r.GET("/api/v1/securities", s.http.Handle)
+	r.GET("/api/v1/securities/{sid:[0-9]+}/news", s.http.Handle)
+	r.GET("/api/v1/securities/{sid:[0-9]+}/day-prices", s.http.Handle)
+	r.GET("/api/v1/securities/{sid:[0-9]+}/day-price-periods", s.http.Handle)
 
-	r.GET("/api/v1/securities/{sid:[0-9]+}", s.controller.Handle)
+	r.GET("/api/v1/securities/{sid:[0-9]+}/quarterly-balance-sheet", s.http.Handle)
+	r.GET("/api/v1/securities/{sid:[0-9]+}/annual-balance-sheet", s.http.Handle)
 
-	r.GET("/api/v1/countries", s.controller.Handle)
-	r.GET("/api/v1/currencies", s.controller.Handle)
-	r.GET("/api/v1/sectors", s.controller.Handle)
-	r.GET("/api/v1/industries", s.controller.Handle)
-	r.GET("/api/v1/exchanges", s.controller.Handle)
+	r.GET("/api/v1/securities/{sid:[0-9]+}/quarterly-income-statements", s.http.Handle)
+	r.GET("/api/v1/securities/{sid:[0-9]+}/annual-income-statements", s.http.Handle)
+
+	r.GET("/api/v1/securities/{sid:[0-9]+}", s.http.Handle)
+
+	r.GET("/api/v1/countries", s.http.Handle)
+	r.GET("/api/v1/currencies", s.http.Handle)
+	r.GET("/api/v1/sectors", s.http.Handle)
+	r.GET("/api/v1/industries", s.http.Handle)
+	r.GET("/api/v1/exchanges", s.http.Handle)
 
 	return r
 }

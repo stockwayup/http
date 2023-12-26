@@ -8,13 +8,12 @@ import (
 //go:generate msgp
 
 type HTTPReq struct {
-	UUID        string                 `msgp:"uuid"`
-	Type        string                 `msgp:"type"`
-	Body        []byte                 `msgp:"body"`
-	AccessToken string                 `msgp:"access_token"`
-	Method      string                 `msgp:"method"`
-	UserValues  map[string]interface{} `msgp:"user_values"`
-	Uri         URI                    `msgp:"uri"` // nolint: golint,revive,stylecheck
+	Type        string                 `msg:"type"`
+	AccessToken string                 `msg:"access_token"`
+	Method      string                 `msg:"method"`
+	UserValues  map[string]interface{} `msg:"user_values"`
+	Uri         URI                    `msg:"uri"` //nolint: golint,revive,stylecheck
+	Body        []byte                 `msg:"body"`
 }
 
 func (r HTTPReq) URI() URI {
@@ -22,13 +21,13 @@ func (r HTTPReq) URI() URI {
 }
 
 type URI struct {
-	PathOriginal []byte `msgp:"path_original"`
-	Scheme       []byte `msgp:"scheme"`
-	Path         []byte `msgp:"path"`
-	QueryString  []byte `msgp:"query_string"`
-	Hash         []byte `msgp:"hash"`
-	Host         []byte `msgp:"host"`
-	Args         Args   `msgp:"query_args"`
+	PathOriginal []byte `msg:"path_original"`
+	Scheme       []byte `msg:"scheme"`
+	Path         []byte `msg:"path"`
+	QueryString  []byte `msg:"query_string"`
+	Hash         []byte `msg:"hash"`
+	Host         []byte `msg:"host"`
+	Args         Args   `msg:"args"`
 }
 
 func (u URI) QueryArgs() Args {
@@ -49,7 +48,7 @@ func (a Args) Peek(key string) []byte {
 }
 
 func NewHTTPReqByReqCtx(ctx *fasthttp.RequestCtx, accessToken string) HTTPReq {
-	// nolint: forcetypeassert
+	//nolint: forcetypeassert
 	req := HTTPReq{
 		Type:        ctx.UserValue(router.MatchedRoutePathParam).(string),
 		Body:        ctx.Request.Body(),

@@ -18,8 +18,8 @@ github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/jinzhu/configor v1.2.2 h1:sLgh6KMzpCmaQB4e+9Fu/29VErtBUqsS2t8C9BNIVsA=
 github.com/jinzhu/configor v1.2.2/go.mod h1:iFFSfOBKP3kC2Dku0ZGB3t3aulfQgTGJknodhFavsU8=
-github.com/klauspost/compress v1.17.6 h1:60eq2E/jlfwQXtvZEeBUYADs+BwKBWURIY+Gj2eRGjI=
-github.com/klauspost/compress v1.17.6/go.mod h1:/dCuZOvVtNoHsyb+cuJD3itjs3NbnF6KH9zAO4BDxPM=
+github.com/klauspost/compress v1.17.7 h1:ehO88t2UGzQK66LMdE8tibEd1ErmzZjNEqWkjLAKQQg=
+github.com/klauspost/compress v1.17.7/go.mod h1:Di0epgTjJY877eYKx5yC51cX2A2Vl2ibi7bDH9ttBbw=
 github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
@@ -49,8 +49,8 @@ github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee h1:8Iv5m6xEo1NR1Avp
 github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee/go.mod h1:qwtSXrKuJh/zsFQ12yEE89xfCrGKK63Rr7ctU/uCo4g=
 github.com/soulgarden/go-amqp-reconnect/rabbitmq v0.0.2 h1:VomNO+8AlG+7Z0/lBF1JLEdu9Tiyf+63bqFnaF91hiI=
 github.com/soulgarden/go-amqp-reconnect/rabbitmq v0.0.2/go.mod h1:nFDfNOjJS89eQUYsgKneE1WWhYfwD1sMN8wT9p5JoP4=
-github.com/soulgarden/rmq-pubsub v0.0.5 h1:mUoalX087cPCehx+JgP5MinZo/OQuUsXIlO4A93177Q=
-github.com/soulgarden/rmq-pubsub v0.0.5/go.mod h1:DOldiG73ML0lblwbwfRVU9/RaccMNRc/L333OIcGimQ=
+github.com/soulgarden/rmq-pubsub v0.0.6 h1:3YtGWhyTrCwE4Ha8yCViVa0e+SNaIZRZ4gipXi55FzQ=
+github.com/soulgarden/rmq-pubsub v0.0.6/go.mod h1:NQUXXcQtVZQtbNSltQ9yHqwrVNm38xSy6YJdW3QPuhc=
 github.com/spf13/cobra v1.8.0 h1:7aJaZx1B85qltLMc546zn58BxxfZdR/W22ej9CFoEf0=
 github.com/spf13/cobra v1.8.0/go.mod h1:WXLWApfZ71AjXPya3WOlMsY9yMs7YeiHhFVlvLyhcho=
 github.com/spf13/pflag v1.0.5 h1:iy+VFUOCP1a+8yFto/drg2CJ5u0yRoB7fZw3DKv/JXA=

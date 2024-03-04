@@ -10,7 +10,7 @@ require (
 	github.com/rs/zerolog v1.32.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/soulgarden/go-amqp-reconnect/rabbitmq v0.0.2
-	github.com/soulgarden/rmq-pubsub v0.0.5
+	github.com/soulgarden/rmq-pubsub v0.0.6
 	github.com/spf13/cobra v1.8.0
 	github.com/valyala/fasthttp v1.52.0
 	go.uber.org/automaxprocs v1.5.3
@@ -21,7 +21,7 @@ require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	github.com/klauspost/compress v1.17.6 // indirect
+	github.com/klauspost/compress v1.17.7 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect

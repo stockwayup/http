@@ -49,8 +49,8 @@ github.com/savsgio/gotils v0.0.0-20240303185622-093b76447511 h1:KanIMPX0QdEdB4R3
 github.com/savsgio/gotils v0.0.0-20240303185622-093b76447511/go.mod h1:sM7Mt7uEoCeFSCBM+qBrqvEo+/9vdmj19wzp3yzUhmg=
 github.com/soulgarden/go-amqp-reconnect/rabbitmq v0.0.2 h1:VomNO+8AlG+7Z0/lBF1JLEdu9Tiyf+63bqFnaF91hiI=
 github.com/soulgarden/go-amqp-reconnect/rabbitmq v0.0.2/go.mod h1:nFDfNOjJS89eQUYsgKneE1WWhYfwD1sMN8wT9p5JoP4=
-github.com/soulgarden/rmq-pubsub v0.0.6 h1:3YtGWhyTrCwE4Ha8yCViVa0e+SNaIZRZ4gipXi55FzQ=
-github.com/soulgarden/rmq-pubsub v0.0.6/go.mod h1:NQUXXcQtVZQtbNSltQ9yHqwrVNm38xSy6YJdW3QPuhc=
+github.com/soulgarden/rmq-pubsub v0.0.7 h1:W2UE7Jw+11uPkhjRU3+MuPM8U01cDBpUSMl7Ew7IbiQ=
+github.com/soulgarden/rmq-pubsub v0.0.7/go.mod h1:FwqHlRM+6/lh3imASN+xD5ylUJkA1C8OBAveo9TC4f8=
 github.com/spf13/cobra v1.8.0 h1:7aJaZx1B85qltLMc546zn58BxxfZdR/W22ej9CFoEf0=
 github.com/spf13/cobra v1.8.0/go.mod h1:WXLWApfZ71AjXPya3WOlMsY9yMs7YeiHhFVlvLyhcho=
 github.com/spf13/pflag v1.0.5 h1:iy+VFUOCP1a+8yFto/drg2CJ5u0yRoB7fZw3DKv/JXA=

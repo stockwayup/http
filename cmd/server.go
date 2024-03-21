@@ -16,13 +16,13 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-//nolint: funlen
+// nolint: funlen
 func NewServerCMD() *cobra.Command {
 	return &cobra.Command{
 		Use:   "server",
 		Short: "Run http server",
 		Args:  cobra.NoArgs,
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			cfg := conf.New()
 
 			logger := zerolog.New(os.Stdout).With().Caller().Logger()

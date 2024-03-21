@@ -12,6 +12,7 @@ require (
 	github.com/soulgarden/go-amqp-reconnect/rabbitmq v0.0.2
 	github.com/soulgarden/rmq-pubsub v0.0.7
 	github.com/spf13/cobra v1.8.0
+	github.com/tinylib/msgp v1.1.9
 	github.com/valyala/fasthttp v1.52.0
 	go.uber.org/automaxprocs v1.5.3
 	golang.org/x/sync v0.6.0
@@ -25,6 +26,7 @@ require (
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/savsgio/gotils v0.0.0-20240303185622-093b76447511 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect

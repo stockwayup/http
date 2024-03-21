@@ -35,6 +35,7 @@ func (rmq *Dialer) Dial() (*rabbitmq.Connection, error) {
 
 		if err != nil {
 			time.Sleep(time.Second)
+
 			attempts--
 
 			continue
